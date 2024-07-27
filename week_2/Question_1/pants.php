@@ -2,7 +2,7 @@
 
 require_once "product.php";
 
-class Pants extends Product {
+class Pant extends Product {
 
     private int $size;
 

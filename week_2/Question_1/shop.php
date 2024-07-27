@@ -21,7 +21,7 @@ class Shop {
         
         foreach ($this->repo as $id => $product) {
             if ((strtolower($type) == 'shirt' && $product instanceof Shirt && $product->getSize() == $size) || 
-                (strtolower($type) == 'pants' && $product instanceof Pants && $product->getSize() == $size)) {
+                (strtolower($type) == 'pants' && $product instanceof Pant && $product->getSize() == $size)) {
                 if ($maxPrice === null || $product->getPrice() <= $maxPrice) {
                     $matches = true;
                     foreach ($options as $key => $value) {

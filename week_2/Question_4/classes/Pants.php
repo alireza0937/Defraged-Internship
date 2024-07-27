@@ -1,6 +1,6 @@
 <?php
 
-require_once "clothing.php";
+require_once "Clothing.php";
 
 class Pants extends Clothing{
 

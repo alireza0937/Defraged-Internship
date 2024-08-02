@@ -11,7 +11,11 @@ $pdo = $connection->getConnection();
 $query_builder = new DatabaseIntraction($connection);
 $update_data =
 [
-    "title"=>"new 4 update title inserted by query builder", 
+    "title"=>"new 6 update title inserted by query builder", 
 ];
 $query_builder->table("posts")->update($update_data)->where("body", "first body inserted by query builder")->exec();
+
+$res = $query_builder->table("posts")->select(["title"])->where("body", "NULL", "IS NOT")->ordering(["title"], "DESC")
+->limit(2)->fetchAll();
+print_r($res) . PHP_EOL;
 ?>

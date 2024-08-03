@@ -35,7 +35,6 @@ class DatabaseIntraction implements DatabaseInterface{
             return $this;
         }
         $this->query .= $user_inputs;
-        echo $value . PHP_EOL;
         $this->parameters[] = $value;
         return $this;
     }
@@ -47,14 +46,12 @@ class DatabaseIntraction implements DatabaseInterface{
 
     public function fetch(){
         $stmt = $this->prepare_and_execute();
-        $result = $stmt->fetch();
-        return $result;
+        return $stmt->fetch();
     }
 
 	public function fetchAll(){
         $stmt = $this->prepare_and_execute();
-        $result = $stmt->fetchAll();
-        return $result;
+        return $stmt->fetchAll();
     }
 
     public function prepare_and_execute() {
@@ -95,8 +92,7 @@ class DatabaseIntraction implements DatabaseInterface{
         return $this;
     }
 
-    public function join(string $type_of_join = "INNER", string $second_table, string $table_one_column, string $table_two_column): DatabaseInterface
-    {
+    public function join(string $type_of_join = "INNER", string $second_table, string $table_one_column, string $table_two_column): DatabaseInterface{
         $type_of_join = strtoupper($type_of_join);
         if (!in_array($type_of_join, ['INNER', 'LEFT', 'RIGHT', 'FULL OUTER'])) {
             throw new InvalidArgumentException("Invalid join type");

@@ -17,6 +17,8 @@ interface DatabaseInterface {
 	public function groupBy(string $column);
 	public function distinct() : DatabaseInterface;
 	public function having(string $condition) : DatabaseInterface;
+	public function prepare_and_execute();
+
 
 }
 ?>

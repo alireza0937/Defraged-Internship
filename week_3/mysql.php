@@ -5,10 +5,10 @@ require_once "DatabaseInterface.php";
 class DatabaseIntraction implements DatabaseInterface{
 
     private $conn;
-    private $table;
+    private string $table;
     private PDO $pdo;
-    private $query;
-    private $parameters = [];
+    private string $query;
+    private array $parameters = [];
 
     public function __construct($connection){
         $this->conn = $connection;
@@ -31,6 +31,7 @@ class DatabaseIntraction implements DatabaseInterface{
     }
 
     public function where(string $column, $value, string $operation = '=') : DatabaseInterface{
+        $value = strtoupper($value);
         $user_inputs =" WHERE $column $operation ?";
         if ($value == "NULL" and $operation == "IS" or $operation == "IS NOT") {
             $this->query .= " WHERE $column $operation NULL";
@@ -43,31 +44,32 @@ class DatabaseIntraction implements DatabaseInterface{
     }
 
     public function exec(): bool{
-        $stmt = $this->pdo->prepare($this->query);
-        $result = $stmt->execute(array_values($this->parameters));
-        $this->parameters = [];
-        return $result;     
+        $result = $this->prepare_and_execute();
+        return $result->rowCount();     
     }
 
-    public function fetch(){
-        $stmt = $this->pdo->prepare($this->query);
-        $stmt->execute(array_values($this->parameters));
-        $result = $stmt->fetch();
-        $this->parameters = [];
-        return $result;
 
+
+    public function fetch(){
+        $stmt = $this->prepare_and_execute();
+        $result = $stmt->fetch();
+        return $result;
     }
 
 	public function fetchAll(){
-        $stmt = $this->pdo->prepare($this->query);
-        echo $this->query . PHP_EOL;
-        $stmt->execute(array_values($this->parameters));
+        $stmt = $this->prepare_and_execute();
         $result = $stmt->fetchAll();
-        $this->parameters = [];
         return $result;
 
     }
 
+
+    public function prepare_and_execute() {
+        $stmt = $this->pdo->prepare($this->query);
+        $stmt->execute(array_values($this->parameters));
+        $this->parameters = [];
+        return $stmt;
+    }
     public function insert(array $fields) : DatabaseInterface{
         $columns = implode(", ", array_keys($fields));
         $placeholders = implode(", ", array_fill(0, count($fields), '?'));

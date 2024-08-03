@@ -4,15 +4,13 @@ require_once "DatabaseInterface.php";
 
 class DatabaseIntraction implements DatabaseInterface{
 
-    private $conn;
     private string $table;
     private PDO $pdo;
     private string $query;
     private array $parameters = [];
 
     public function __construct($connection){
-        $this->conn = $connection;
-        $this->pdo = $this->conn->getConnection();
+        $this->pdo = $connection->getConnection();
         $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
     }
 
@@ -31,24 +29,21 @@ class DatabaseIntraction implements DatabaseInterface{
     }
 
     public function where(string $column, $value, string $operation = '=') : DatabaseInterface{
-        $value = strtoupper($value);
         $user_inputs =" WHERE $column $operation ?";
-        if ($value == "NULL" and $operation == "IS" or $operation == "IS NOT") {
+        if (strtoupper($value) == "NULL" and $operation == "IS" or $operation == "IS NOT") {
             $this->query .= " WHERE $column $operation NULL";
             return $this;
         }
         $this->query .= $user_inputs;
+        echo $value . PHP_EOL;
         $this->parameters[] = $value;
         return $this;
-
     }
 
     public function exec(): bool{
         $result = $this->prepare_and_execute();
-        return $result->rowCount();     
+        return $result->rowCount() > 0;     
     }
-
-
 
     public function fetch(){
         $stmt = $this->prepare_and_execute();
@@ -60,9 +55,7 @@ class DatabaseIntraction implements DatabaseInterface{
         $stmt = $this->prepare_and_execute();
         $result = $stmt->fetchAll();
         return $result;
-
     }
-
 
     public function prepare_and_execute() {
         $stmt = $this->pdo->prepare($this->query);

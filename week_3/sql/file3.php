@@ -10,11 +10,6 @@ $user = "YOUR_USERNAME";
 $password = "YOUR_PASSWORD";
 $dbname = "YOUR_DB_NAME";
 
-$host = "127.0.0.1";
-$user = "root";
-$password = "alireza1377";
-$dbname = "intern";
-
 $connection = new MySqlDatabaseConnection($host, $dbname, $user, $password);
 $query_builder = new DatabaseIntraction($connection);
 $res = $query_builder

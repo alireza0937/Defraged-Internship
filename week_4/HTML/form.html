@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Form Validation</title>
+</head>
+<body>
+
+    <h1>Test Form Validataion</h1>
+
+    <form>
+        <table border="0" cellspacing="5" cellpadding="3">
+            <tr>
+                <td>Name*</td>
+                <td><input type="text" name="name"></td>
+                <td><font color="red">Please enter your name!</font></td>
+            </tr>
+            <tr>
+                <td>Address</td>
+                <td><input type="text" name="address"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Zip Code*</td>
+                <td><input type="text" name="zipcode"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Country*</td>
+                <td>
+                    <select name="country">
+                        <option value="">Please select...</option>
+                    </select>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Gender*</td>
+                <td>
+                    <input type="radio" name="gender" value="male"> Male
+                    <input type="radio" name="gender" value="female"> Female
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Preferences*</td>
+                <td>
+                    <input type="checkbox" name="preference" value="red"> Red
+                    <input type="checkbox" name="preference" value="green"> Green
+                    <input type="checkbox" name="preference" value="blue"> Blue
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Phone*</td>
+                <td><input type="text" name="phone"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Email*</td>
+                <td><input type="email" name="email"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Password (6-8 characters)*</td>
+                <td><input type="password" name="password"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Verify Password*</td>
+                <td><input type="password" name="verify_password"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="submit" value="SEND">
+                    <input type="reset" value="CLEAR">
+                </td>
+            </tr>
+        </table>
+    </form>
+
+</body>
+</html>

@@ -26,12 +26,13 @@ class Task {
         }
     }
 
-    public function deleteTask(int $id){
+        public function deleteTask(int $id){
         $this->db->query('DELETE FROM tasks WHERE id = :id');
         $this->db->bind(':id', $id);
-        if($this->db->execute()){
+        $this->db->execute();
+        if($this->db->rowCount() > 0){
             return true;
-          } else {
+        } else {
             return false;
         }
     }

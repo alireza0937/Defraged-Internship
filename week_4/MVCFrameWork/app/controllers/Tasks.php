@@ -34,7 +34,11 @@ class Tasks extends Controller {
     
     public function delete($id){
         $taskModel = $this->model("task");
-        $taskModel->deleteTask($id);
-        redirect("tasks/");
+        $response = $taskModel->deleteTask($id);
+        if ($response) {
+            redirect("tasks/");
+        } else {
+            die("Invalid task ID");
+        }
     }
 }

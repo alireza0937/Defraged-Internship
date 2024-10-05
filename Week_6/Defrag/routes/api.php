@@ -12,7 +12,7 @@ use App\Http\Controllers\SmsCommunicationController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-/*A Default Message When The User Insert Wrong Token*/ 
+/* A Default Message When The User Insert Wrong Token */ 
 Route::get("", [UserController::class, "token"])->name("token");
 
 /* Enter Email For Getting The OTP In That Email */

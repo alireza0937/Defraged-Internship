@@ -13,6 +13,6 @@ class cameraConfig extends Model
 
     public function groupConfig()
     {
-        return $this->belongsTo(GroupConfig::class);
+        return $this->belongsTo(groupCamera::class);
     }
 }

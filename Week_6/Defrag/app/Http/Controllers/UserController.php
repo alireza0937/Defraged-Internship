@@ -6,31 +6,14 @@ use App\Jobs\DeleteOtpJob;
 use App\Models\User;
 use App\Mail\UserMail;
 use App\Models\UserOtp;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
-
-    public function getEmail(Request $request){
-        try {
-            $email = $request->validate([
-                "email" => ["required", "email"]
-            ]);
-            $otp = $this->generateOTP();
-            $response = $this->checkUserHasActiveOTP($email);
-            if ($response[0]) {
-                $this->storeOTP($otp, $response[1]);
-                $this->sendEmail($email, $otp);
-                DeleteOtpJob::dispatch($response[1])->delay(now()->addMinutes(5));
-                return response()->json(["message" => "OTP sent to your email"]);
-            }
-            return response()->json(["message"=> "You already have an active OTP."], 400);
-
-        } catch (ValidationException $e) {
-            return response()->json(["message" => "Invalid email"], 422);
-        }
+    public function getEmail(){
+        $email = $this->validateUserInputs();
+        return $this->startOtpProcess($email);
     }
 
     public function generateOTP(){
@@ -45,17 +28,12 @@ class UserController extends Controller
     }
 
     public function checkUserHasActiveOTP($email){
-        $userData = User::query()->where("email", $email)->get()->first();
-        if (is_null($userData)) {
-            return response()->json([
-                'message' => 'User Not Found.'
-            ], 404)->throwResponse();
+        $userData = $this->checkUserExist($email);
+        $chekingUserHasActiveOtp = UserOtp::query()->where("user_id", $userData->id)->first();
+        if (is_null($chekingUserHasActiveOtp)) {
+            return $userData;
         }
-        $chekingUserHasActiveOtp = UserOtp::query()->where("user_id", $userData->id)->get();
-        if (count($chekingUserHasActiveOtp) >= 1) {
-            return [0, 0];
-        }
-        return [1, $userData];
+        return response()->json(["message"=> "You already have an active OTP."], 400)->throwResponse();
     }
 
     public function storeOTP($otp, $userData){
@@ -67,5 +45,41 @@ class UserController extends Controller
 
     public function token(){
         return response()->json(["message"=> "You should Use Your Token For Access Our Apis."], 401);
+    }
+
+    private function validateUserInputs(){
+        try {
+            $email = request()->validate([
+                "email" => ["required", "email"]
+            ]);
+            return $email;
+        } catch (ValidationException $e) {
+            return response()->json([
+                'errors' => $e->validator->errors(),
+            ], 422)->throwResponse();
+        }
+    }
+
+    private function startOtpProcess($email){
+        $otp = $this->generateOTP();
+        $userData = $this->checkUserHasActiveOTP($email);
+        $this->storeOTP($otp, $userData);
+        $this->sendEmail($email, $otp);
+        $this->addDeleteTheOtpAfterSpecificTime($userData);
+        return response()->json(["message" => "OTP sent to your email"]);
+    }
+
+    private function addDeleteTheOtpAfterSpecificTime($userData){
+        DeleteOtpJob::dispatch($userData)->delay(now()->addMinutes(5));
+    }
+
+    private function checkUserExist($email){
+        $userData = User::query()->where("email", $email)->get()->first();
+        if (is_null($userData)) {
+            return response()->json([
+                'message' => 'User Not Found.'
+            ], 404)->throwResponse();
+        }
+        return $userData;
     }
 }

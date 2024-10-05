@@ -18,9 +18,11 @@ class AuthController extends Controller
             }
             $user = User::query()->find($validateOTP->user_id);
             $token = $user->createToken("auth_token");
+
             return ['token' => $token->plainTextToken];
         }
          catch (\Throwable $th) {
+            
             return response()->json(["message" => "You Should Send Me OTP."], 422);
         }
     }

@@ -13,10 +13,7 @@ class GroupConfigController extends Controller
 
     public function index(){
         $allGroups = GroupConfig::query()->get();
-        $test = groupCamera::query()->get();
-        return $test;
-        return $allGroups;
-        return response()->json($allGroups->items());
+        return response()->json($allGroups);
     }
 
     public function store(){
